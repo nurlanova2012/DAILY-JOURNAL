@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const _ = require("lodash");
+
 const app = express();
 
 const homeStartingContent =
@@ -33,6 +35,30 @@ app.get("/contact", function (req, res) {
 app.get("/compose", function (req, res) {
   res.render("compose");
 });
+app.get("/posts/:topic", function (req, res) {
+  const requestedTitle = _.lowerCase(req.params.topic);
+
+  posts.forEach(function (post) {
+    const storedTitle = _.lowerCase(post.title);
+
+    if (requestedTitle === storedTitle) {
+      res.render("post", {
+        title: post.title,
+        post: post.post 
+        });
+    }
+    function truncateText(storedTitle, requestedTitle) {
+      if (storedTitle.length > requestedTitle) {
+          truncated = truncated.substr(0,maxLength) + '...';
+      }
+      return truncated;
+    }
+    
+    storedTitle.innerText = truncateText('post', 100);
+  });
+});
+
+
 
 app.post("/", function (req, res) {
   const titleContent = req.body.newTitle;
@@ -40,13 +66,12 @@ app.post("/", function (req, res) {
 
   const post = { title: titleContent, post: postContent };
   posts.push(post);
-  res.redirect("/");
 
-  // if (item === "Compose") {
-  //   console.log(item);
-  // } else {
-  // }
+  res.redirect("/");
 });
+
+
+
 
 app.listen(3000, function () {
   console.log("Server is running on port 3000.");
