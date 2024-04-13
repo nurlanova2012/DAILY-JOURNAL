@@ -24,8 +24,10 @@ app.get("/", function (req, res) {
     contentAbout: aboutContent,
     contentContact: contactContent,
     posts: posts,
+   
   });
 });
+
 app.get("/about", function (req, res) {
   res.render("about", { contentAbout: aboutContent });
 });
@@ -35,8 +37,10 @@ app.get("/contact", function (req, res) {
 app.get("/compose", function (req, res) {
   res.render("compose");
 });
+
 app.get("/posts/:topic", function (req, res) {
   const requestedTitle = _.lowerCase(req.params.topic);
+
 
   posts.forEach(function (post) {
     const storedTitle = _.lowerCase(post.title);
@@ -44,21 +48,11 @@ app.get("/posts/:topic", function (req, res) {
     if (requestedTitle === storedTitle) {
       res.render("post", {
         title: post.title,
-        post: post.post 
-        });
+        post: post.post,
+      });
     }
-    function truncateText(storedTitle, requestedTitle) {
-      if (storedTitle.length > requestedTitle) {
-          truncated = truncated.substr(0,maxLength) + '...';
-      }
-      return truncated;
-    }
-    
-    storedTitle.innerText = truncateText('post', 100);
   });
 });
-
-
 
 app.post("/", function (req, res) {
   const titleContent = req.body.newTitle;
@@ -69,7 +63,6 @@ app.post("/", function (req, res) {
 
   res.redirect("/");
 });
-
 
 
 
